@@ -8,30 +8,26 @@ return {
   },
   {
     "williamboman/mason-lspconfig.nvim",
-    lazy = false,
-    opts = {
-      auto_install = true,
-    },
+    config = function ()
+        require("mason-lspconfig").setup({ensure_installed = {"lua_ls", "pyright", "clangd"}})
+    end
   },
   {
     "neovim/nvim-lspconfig",
     lazy = false,
     config = function()
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
       local lspconfig = require("lspconfig")
-      lspconfig.ts_ls.setup({
-        capabilities = capabilities
-      })
-      lspconfig.solargraph.setup({
-        capabilities = capabilities
-      })
-      lspconfig.html.setup({
-        capabilities = capabilities
-      })
-      lspconfig.lua_ls.setup({
-        capabilities = capabilities
-      })
+      vim.diagnostic.config({
+                virtual_text = true,
+                signs = true,
+                underline = true,
+                update_in_reset = false,
+                severity_sort = true,
+            })
+      lspconfig.lua_ls.setup({capabilities = capabilities})
+      lspconfig.clangd.setup({capabilities = capabilities})
+      lspconfig.pyright.setup({capabilities = capabilities})
 
       vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
       vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, {})
